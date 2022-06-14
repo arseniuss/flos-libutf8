@@ -1,0 +1,16 @@
+nbproject/
+*.zip
+*.a
+*.o
+source/isalpha.c
+source/iscntrl.c
+source/isdigit.c
+source/islower.c
+source/isspace.c
+source/istitle.c
+source/isupper.c
+test/boundary
+test/kosme
+test/malformed
+test/overlong
+share/UnicodeData.txt
