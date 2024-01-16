@@ -48,7 +48,7 @@ utf8_isxdigit(utf8_char c) {
 }
 
 int
-utf8_tonum(utf8_char c) {
+utf8_xdigit2num(utf8_char c) {
     if (c >= '0' && c <= '9')
         return c - '0';
     if (c >= 'A' && c <= 'F')
