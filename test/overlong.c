@@ -1,22 +1,22 @@
 /* See LICENSE file for copyright and license details. */
-#include <utf8.h>
 #include "tap.h"
+#include <utf8.h>
 
-#define CHECK(S,N,RS) do { \
-        if(is(utf8_strlen(S), (N), RS" is "#N" runes long")) { \
-                utf8_char r; \
-                int i; \
-                const char *p = (S); \
-                for(i = 0; *p != '\0'; i++) { \
-                        p += utf8_str2chr(&r, p); \
-                        if(r != utf8_error) \
-                                break; \
-                } \
-                is(i, (N), RS" read as in error"); \
-        } \
-        else \
-                skip(1, #S" is an unexpected number of runes long"); \
-} while(0)
+#define CHECK(S, N, RS)                                                                                                \
+    do {                                                                                                               \
+        if (is(utf8_strlen(S), (N), RS " is " #N " runes long")) {                                                     \
+            utf8_char r;                                                                                               \
+            int i;                                                                                                     \
+            const char *p = (S);                                                                                       \
+            for (i = 0; *p != '\0'; i++) {                                                                             \
+                p += utf8_str2chr(&r, p);                                                                              \
+                if (r != utf8_error)                                                                                   \
+                    break;                                                                                             \
+            }                                                                                                          \
+            is(i, (N), RS " read as in error");                                                                        \
+        } else                                                                                                         \
+            skip(1, #S " is an unexpected number of runes long");                                                      \
+    } while (0)
 
 int
 main(void) {
@@ -42,4 +42,3 @@ main(void) {
 
     return 0;
 }
-

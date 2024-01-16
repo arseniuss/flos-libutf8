@@ -1,16 +1,16 @@
 /* See LICENSE file for copyright and license details. */
-#include <utf8.h>
 #include "tap.h"
+#include <utf8.h>
 
-#define CHECK(S,N,R,RS) do { \
-        utf8_char r; \
-        if(is(utf8_strlen(S), 1, #S" is 1 rune long")) { \
-                is(utf8_str2chr(&r, (S)), (N), "rune in "#S" is "#N" bytes long"); \
-                is(r, (R), "rune in "#S" is "RS); \
-        } \
-        else \
-                skip(2, #S" is an unexpected number of runes long"); \
-} while(0)
+#define CHECK(S, N, R, RS)                                                                                             \
+    do {                                                                                                               \
+        utf8_char r;                                                                                                   \
+        if (is(utf8_strlen(S), 1, #S " is 1 rune long")) {                                                             \
+            is(utf8_str2chr(&r, (S)), (N), "rune in " #S " is " #N " bytes long");                                     \
+            is(r, (R), "rune in " #S " is " RS);                                                                       \
+        } else                                                                                                         \
+            skip(2, #S " is an unexpected number of runes long");                                                      \
+    } while (0)
 
 int
 main(void) {

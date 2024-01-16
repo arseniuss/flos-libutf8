@@ -1,7 +1,9 @@
-nbproject/
-*.zip
+.vscode/
 *.a
 *.o
+*.zip
+nbproject/
+share/UnicodeData.txt
 source/isalpha.c
 source/iscntrl.c
 source/isdigit.c
@@ -13,4 +15,3 @@ test/boundary
 test/kosme
 test/malformed
 test/overlong
-share/UnicodeData.txt

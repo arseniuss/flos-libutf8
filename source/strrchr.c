@@ -1,6 +1,6 @@
 /* See LICENSE file for copyright and license details. */
-#include <string.h>
 #include "utf8.h"
+#include <string.h>
 
 char *
 utf8_strrchr(const char *s, utf8_char r) {
@@ -16,5 +16,5 @@ utf8_strrchr(const char *s, utf8_char r) {
         if (r == r0)
             p = s;
     }
-    return (char *) p;
+    return (char *)p;
 }

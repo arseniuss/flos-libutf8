@@ -1,22 +1,22 @@
 /* See LICENSE file for copyright and license details. */
-#include <utf8.h>
 #include "tap.h"
+#include <utf8.h>
 
-#define CHECK(S,N,T,RS) do { \
-        if(is(utf8_strlen(S), (N), RS" is "#N" runes long")) { \
-                utf8_char r; \
-                int i; \
-                const char *p = (S); \
-                for(i = 0; *p != '\0'; i++) { \
-                        p += utf8_str2chr(&r, p); \
-                        if(r != utf8_error && !((T) && i % 2 == 1 && r == ' ')) \
-                                break; \
-                } \
-                is(i, (N), RS" read as in error"); \
-        } \
-        else \
-                skip(1, #S" is an unexpected number of runes long"); \
-} while(0)
+#define CHECK(S, N, T, RS)                                                                                             \
+    do {                                                                                                               \
+        if (is(utf8_strlen(S), (N), RS " is " #N " runes long")) {                                                     \
+            utf8_char r;                                                                                               \
+            int i;                                                                                                     \
+            const char *p = (S);                                                                                       \
+            for (i = 0; *p != '\0'; i++) {                                                                             \
+                p += utf8_str2chr(&r, p);                                                                              \
+                if (r != utf8_error && !((T) && i % 2 == 1 && r == ' '))                                               \
+                    break;                                                                                             \
+            }                                                                                                          \
+            is(i, (N), RS " read as in error");                                                                        \
+        } else                                                                                                         \
+            skip(1, #S " is an unexpected number of runes long");                                                      \
+    } while (0)
 
 int
 main(void) {
@@ -33,12 +33,15 @@ main(void) {
     CHECK("\x80\xBF\x80\xBF\x80\xBF\x80", 7, 0, "7 continuation bytes");
 
     CHECK("\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8A\x8B\x8C\x8D\x8E\x8F"
-            "\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9A\x9B\x9C\x9D\x9E\x9F"
-            "\xA0\xA1\xA2\xA3\xA4\xA5\xA6\xA7\xA8\xA9\xAA\xAB\xAC\xAD\xAE\xAF"
-            "\xB0\xB1\xB2\xB3\xB4\xB5\xB6\xB7\xB8\xB9\xBA\xBB\xBC\xBD\xBE\xBF", 64, 0, "all 64 continuation bytes");
+          "\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9A\x9B\x9C\x9D\x9E\x9F"
+          "\xA0\xA1\xA2\xA3\xA4\xA5\xA6\xA7\xA8\xA9\xAA\xAB\xAC\xAD\xAE\xAF"
+          "\xB0\xB1\xB2\xB3\xB4\xB5\xB6\xB7\xB8\xB9\xBA\xBB\xBC\xBD\xBE\xBF",
+          64, 0, "all 64 continuation bytes");
     CHECK("\xC0 \xC1 \xC2 \xC3 \xC4 \xC5 \xC6 \xC7 \xC8 \xC9 \xCA \xCB \xCC \xCD \xCE \xCF "
-            "\xD0 \xD1 \xD2 \xD3 \xD4 \xD5 \xD6 \xD7 \xD8 \xD9 \xDA \xDB \xDC \xDD \xDE \xDF ", 64, 1, "all 32 2-leading bytes spaced");
-    CHECK("\xE0 \xE1 \xE2 \xE3 \xE4 \xE5 \xE6 \xE7 \xE8 \xE9 \xEA \xEB \xEC \xED \xEE \xEF ", 32, 1, "all 16 3-leading bytes spaced");
+          "\xD0 \xD1 \xD2 \xD3 \xD4 \xD5 \xD6 \xD7 \xD8 \xD9 \xDA \xDB \xDC \xDD \xDE \xDF ",
+          64, 1, "all 32 2-leading bytes spaced");
+    CHECK("\xE0 \xE1 \xE2 \xE3 \xE4 \xE5 \xE6 \xE7 \xE8 \xE9 \xEA \xEB \xEC \xED \xEE \xEF ", 32, 1,
+          "all 16 3-leading bytes spaced");
     CHECK("\xF0 \xF1 \xF2 \xF3 \xF4 \xF5 \xF6 \xF7 ", 16, 1, "all 8 4-leading bytes spaced");
     CHECK("\xF8 \xF9 \xFA \xFB ", 8, 1, "all 4 5-leading bytes spaced");
     CHECK("\xFC \xFD ", 4, 1, "all 2 6-leading bytes spaced");
@@ -57,4 +60,3 @@ main(void) {
 
     return 0;
 }
-

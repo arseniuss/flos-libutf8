@@ -28,4 +28,3 @@ utf8_nchrlen(const utf8_char *p, size_t len) {
 
     return k;
 }
-

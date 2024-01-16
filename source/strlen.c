@@ -57,5 +57,5 @@ utf8_strnlen(const char *s, size_t len) {
 
 size_t
 utf8_strlen(const char *s) {
-    return utf8_strnlen(s, (size_t) - 1);
+    return utf8_strnlen(s, (size_t)-1);
 }
