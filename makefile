@@ -25,6 +25,7 @@ SRC = \
     source/strlen.c \
     source/strrchr.c \
     source/strstr.c \
+    source/type.c \
     $(GEN)
 
 OBJ = $(SRC:.c=.o)
