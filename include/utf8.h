@@ -46,12 +46,14 @@ extern "C" {
 int utf8_isalpha(utf8_char c);
 int utf8_iscntrl(utf8_char c);
 int utf8_isdigit(utf8_char c);
-int utf8_toint(utf8_char c);
+int utf8_isgraph(utf8_char c);
 int utf8_islower(utf8_char c);
+int utf8_isprint(utf8_char c);
 int utf8_isspace(utf8_char c);
 int utf8_istitle(utf8_char c);
 int utf8_isupper(utf8_char c);
 int utf8_isxdigit(utf8_char c);
+int utf8_toint(utf8_char c);
 
 utf8_char utf8_tolower(utf8_char c);
 utf8_char utf8_toupper(utf8_char c);

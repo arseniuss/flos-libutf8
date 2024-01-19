@@ -58,3 +58,13 @@ utf8_xdigit2num(utf8_char c) {
 
     return -1;
 }
+
+int
+utf8_isgraph(utf8_char c) {
+    return !utf8_isspace(c) && utf8_isprint(c);
+}
+
+int
+utf8_isprint(utf8_char c) {
+    return !utf8_iscntrl(c) && c != 0x2028 && c != 0x2029 && !(c >= 0xFFF9 && c <= 0xFFFB);
+}
