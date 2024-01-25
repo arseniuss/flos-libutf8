@@ -25,7 +25,8 @@
  */
 
 #include "tap.h"
-#include <utf8.h>
+
+#include <flos/utf8.h>
 
 #define CHECK(S, N, R, RS)                                                                                             \
     do {                                                                                                               \

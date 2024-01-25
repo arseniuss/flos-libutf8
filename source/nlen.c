@@ -24,7 +24,7 @@
  * SOFTWARE.
  */
 
-#include "utf8.h"
+#include <flos/utf8.h>
 
 int
 utf8_nlen(const char *s, size_t len) {

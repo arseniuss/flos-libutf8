@@ -24,7 +24,7 @@
  * SOFTWARE.
  */
 
-#include "utf8.h"
+#include <flos/utf8.h>
 
 /* lookup table for the number of bytes expected in a sequence */
 const unsigned char utf8_tbl[64] = {

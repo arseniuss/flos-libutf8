@@ -28,7 +28,7 @@
 .POSIX:
 
 LIB = lib/libutf8.a
-HDR = include/utf8.h
+HDR = include/flos/utf8.h
 
 GEN = \
     source/isalpha.c \

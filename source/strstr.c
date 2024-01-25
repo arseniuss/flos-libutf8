@@ -24,8 +24,9 @@
  * SOFTWARE.
  */
 
-#include "utf8.h"
 #include <string.h>
+
+#include <flos/utf8.h>
 
 char *
 utf8_strstr(const char *s1, const char *s2) {

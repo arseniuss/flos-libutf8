@@ -24,7 +24,7 @@
  * SOFTWARE.
  */
 
-#include "utf8.h"
+#include <flos/utf8.h>
 
 int
 utf8_chr2str(char *s, const utf8_char *p) {

@@ -24,8 +24,9 @@
  * SOFTWARE.
  */
 
+#include <flos/utf8.h>
+
 #include "tap.h"
-#include <utf8.h>
 
 #define CHECK(S, N, RS)                                                                                                \
     do {                                                                                                               \

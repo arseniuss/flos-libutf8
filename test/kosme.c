@@ -24,8 +24,9 @@
  * SOFTWARE.
  */
 
+#include <flos/utf8.h>
+
 #include "tap.h"
-#include <utf8.h>
 
 #define KOSME "\xCE\xBA\xE1\xBD\xB9\xCF\x83\xCE\xBC\xCE\xB5"
 
