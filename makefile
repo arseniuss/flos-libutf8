@@ -69,6 +69,8 @@ CFLAGS += -D_XOPEN_SOURCE=700
 
 include config.mk
 
+.PHONY: all check clean
+
 all: $(LIB)
 
 $(LIB): $(OBJ)
@@ -89,7 +91,7 @@ $(GENOBJ) source/type.o: source/type.c
 
 $(TEST): $(LIB) test/tap.h
 
-tests: $(TEST)
+check: $(TEST)
 	prove $(TEST)
 
 clean:
