@@ -26,8 +26,13 @@ jobs:
       run: make pkg
     - name: make dist
       run: make dist
-    - name: upload binary package
+    - name: upload distribution package
       uses: actions/upload-artifact@v4.3.3
       with:
         name: distribution
         path: ./libutf8-${{ env.VERSION }}.tar.gz
+    - name: upload binary package
+      uses: actions/upload-artifact@v4.3.3
+      with:
+        name: binary
+        path: ./libutf8-${{ env.VERSION }}-${{ env.TRIPLE }}.tar.gz
