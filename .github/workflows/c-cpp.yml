@@ -24,13 +24,13 @@ jobs:
       run: make dist
     - name: release
       uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
           libutf8-${{ env.VERSION }}.tar.gz
           libutf8-${{ env.VERSION }}-${{ env.TRIPLE }}.tar.gz
     - name: upload distribution package
       uses: actions/upload-artifact@v4.3.3
-      if: startsWith(github.ref, 'refs/tags/')
       with:
         name: distribution
         path: ./libutf8-${{ env.VERSION }}.tar.gz
