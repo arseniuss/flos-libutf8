@@ -6,6 +6,6 @@ Mofifications are made for cell programming language / flos operating system.
 
 MIT License
 
-© 2012-2016 Connor Lane Smith <cls@lubutu.com>
-© 2015 Laslo Hunhold <dev@frign.de>
-© 2022-2024 Armands Arseniuss Skolmeisters <arseniuss@arseniuss.id.lv>
+© 2012-2016 Connor Lane Smith \<cls@lubutu.com\><br>
+© 2015 Laslo Hunhold \<dev@frign.de\><br>
+© 2022-2024 Armands Arseniuss Skolmeisters \<arseniuss@arseniuss.id.lv\><br>
