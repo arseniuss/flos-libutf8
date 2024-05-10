@@ -10,7 +10,7 @@ progdir=$(dirname "$0")
 # Configuration
 #
 version=0.1
-package=pcellc
+package=libutf8
 
 setvar() {
     local name="$1"
