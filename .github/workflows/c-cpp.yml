@@ -22,10 +22,11 @@ jobs:
     - name: make pkg
       run: |
         make pkg
-        export VERSION=$(grep "VERSION = " ./config.mk | cut -d " " -f 3)
+        echo VERSION=$(grep "VERSION = " ./config.mk | cut -d " " -f 3) >> $GITHUB_ENV
     - name: make dist
       run: make dist
     - name: upload binary package
       uses: actions/upload-artifact@v4.3.3
       with:
-        path: ./pcell-$VERSION.tar.gz
+        name: distribution
+        path: ./pcell-${{ env.VERSION }}.tar.gz
