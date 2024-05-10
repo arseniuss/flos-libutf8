@@ -103,7 +103,7 @@ build/%: test/%.c $(LIB)
 	$(PP) $(CFLAGS) $< > $(builddir)/$*.c.pp
 	$(CC) $(CFLAGS) -MMD -MF $(builddir)/$*.d -o $@ $^
 
-install: $(HDR) $(LIB)builddir
+install: $(HDR) $(LIB)
 	install -d $(DESTDIR)$(includedir)/
 	install -m 644 $(HDR) $(DESTDIR)$(includedir)/
 	install -d $(DESTDIR)$(libdir)
