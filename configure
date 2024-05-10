@@ -9,7 +9,7 @@ progdir=$(dirname "$0")
 #
 # Configuration
 #
-version=0.1
+version=0.0.1
 package=libutf8
 
 setvar() {
