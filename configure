@@ -84,16 +84,23 @@ done
 #
 # Base directories
 #
-ARCH=$(uname -m)
-if test $(uname -o) = "flos"; then
-	setvar prefix /$ARCH
+test -z "$ARCH" && ARCH=$(uname -m)
+test -z "$OS" && OS=$(uname -o)
+
+if test "$OS" = "flos"; then
+	setvar prefix /
 else
-	setvar prefix /flos/$ARCH
+	setvar prefix /opt/flos
 fi
 
 setvar srcdir $(pwd)
-setvar exec_prefix "$prefix"
+if test "$OS" = "flos"; then
+	setvar exec_prefix "$prefix/$ARCH"
+else
+	setvar exec_prefix "$prefix"
+fi
 setvar datarootdir "$prefix/share"
+
 setvar CFLAGS "-Wall -Wshadow -Wextra"
 setvar LDFLAGS
 setvar LIBS
@@ -122,6 +129,7 @@ PP = $(setechovar PP cpp)
 PROVE = $(setechovar PROVE prove)
 
 ARCH = $ARCH
+OS = $OS
 TRIPLE = $(gcc -dumpmachine)
 
 CFLAGS = $CFLAGS

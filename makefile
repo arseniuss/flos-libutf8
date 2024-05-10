@@ -29,8 +29,13 @@
 
 include config.mk
 
-LIB = lib/libutf8.a
-HDR = include/flos/utf8.h
+BINS = \
+    bin/build_c.awk \
+    bin/update-UnicodeData.bash
+
+HDRS = include/flos/utf8.h
+
+LIBS = lib/libutf8.a
 
 GEN = \
     source/isalpha.c \
@@ -41,7 +46,7 @@ GEN = \
     source/istitle.c \
     source/isupper.c
 
-GENOBJ = $(GEN:.c=.o)
+GENOBJS = $(GEN:.c=.o)
 
 SRCS = \
     source/chr2str.c \
@@ -53,7 +58,10 @@ SRCS = \
     source/strlen.c \
     source/strrchr.c \
     source/strstr.c \
-    source/type.c \
+    source/type.c
+
+ALL_SRCS = \
+    $(SRCS) \
     $(GEN)
 
 TESTSRCS = \
@@ -62,7 +70,16 @@ TESTSRCS = \
     test/malformed.c \
     test/overlong.c
 
-TEST = $(TESTSRC:.c=)
+EXTRA = \
+    .clang-format \
+    .github/* \
+    .gitignore \
+    configure \
+    LICENSE \
+    README.md \
+    source/type.h \
+    source/typebody.h \
+    test/tap.h
 
 CFLAGS += -Iinclude
 CFLAGS += -D_POSIX_C_SOURCE=200809L
@@ -70,17 +87,17 @@ CFLAGS += -D_XOPEN_SOURCE=700
 
 TEMPDIR != mktemp -d
 
-OBJS != echo $(SRCS:.c=.o) | sed -e 's/source\//$(builddir)\/source\//g'
-DEPS != echo $(SRCS:.c=.d) | sed -e 's/source\//$(builddir)\/source\//g'
-PPS != echo $(SRCS:.c=.c.pp) | sed -e 's/source\//$(builddir)\/source\//g'
+OBJS != echo $(ALL_SRCS:.c=.o) | sed -e 's/source\//$(builddir)\/source\//g'
+DEPS != echo $(ALL_SRCS:.c=.d) | sed -e 's/source\//$(builddir)\/source\//g'
+PPS != echo $(ALL_SRCS:.c=.c.pp) | sed -e 's/source\//$(builddir)\/source\//g'
 TESTS != echo $(TESTSRCS:.c=) | sed -e 's/test\//$(builddir)\//g'
 
 .SUFFIXES:
 .PHONY: all check install install-strip distclean clean pkg
 
-all: $(LIB)
+all: $(LIBS)
 
-$(LIB): $(OBJS)
+$(LIBS): $(OBJS)
 	mkdir -p lib
 	rm -f $@
 	$(AR) -rcs $@ $(OBJS)
@@ -93,30 +110,30 @@ $(builddir)/%.o: %.c
 $(GEN): bin/build_c.awk share/UnicodeData.txt source/type.h source/typebody.h
 	$(AWK) -f bin/build_c.awk share/UnicodeData.txt
 
-$(GENOBJ) source/type.o: source/type.c
+$(GENOBJS) source/type.o: source/type.c
 
-check: $(TESTS) $(LIB)
+check: $(TESTS) $(LIBS)
 	$(PROVE) $(PROVE_FLAGS) $(TESTS)
 
-build/%: test/%.c $(LIB)
+build/%: test/%.c $(LIBS)
 	@mkdir -p $(builddir)/$(*D)
 	$(PP) $(CFLAGS) $< > $(builddir)/$*.c.pp
 	$(CC) $(CFLAGS) -MMD -MF $(builddir)/$*.d -o $@ $^
 
-install: $(HDR) $(LIB)
+install: $(HDRS) $(LIBS)
 	install -d $(DESTDIR)$(includedir)/
-	install -m 644 $(HDR) $(DESTDIR)$(includedir)/
+	install -m 644 $(HDRS) $(DESTDIR)$(includedir)/
 	install -d $(DESTDIR)$(libdir)
-	install -m 644 $(LIB) $(DESTDIR)$(libdir)
+	install -m 644 $(LIBS) $(DESTDIR)$(libdir)
 
-install-strip: $(HDR) $(LIB)
-	install -s -m 644 $(LIB) $(DESTDIR)$(libdir)/
+install-strip: $(HDRS) $(LIBS)
+	install -s -m 644 $(LIBS) $(DESTDIR)$(libdir)/
 
-dist:
-	rm -rf tmp
-
-distclean: clean
-	rm -vf config.mk UCD.zip share/UnicodeData.txt
+dist: $(BINS) $(HDRS) $(SRCS) $(TESTSRCS) $(EXTRA)
+	cp -v -pr --parents $^ $(TEMPDIR)
+	cd $(TEMPDIR) && find . -type f -print > ../pkg.lst
+	cd $(TEMPDIR) && tar zcvf $(srcdir)/$(PACKAGE)-$(VERSION).tar.gz `cat ../pkg.lst`
+	rm -rf $(TEMPDIR) pkg.lst
 
 pkg: all
 	make DESTDIR=$(TEMPDIR) install
@@ -125,4 +142,9 @@ pkg: all
 	rm -rf $(TEMPDIR) pkg.lst
 
 clean:
-	rm -vf $(GEN) $(OBJ) $(LIB) $(TEST)
+	rm -vrf $(GEN) $(LIBS) $(TEST) $(builddir)
+
+distclean: clean
+	rm -vf config.mk UCD.zip share/UnicodeData.txt
+
+-include $(DEPS)
