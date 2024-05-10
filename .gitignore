@@ -1,7 +1,10 @@
 .vscode/
 *.a
 *.o
+*.tar.gz
 *.zip
+build/
+config.mk
 nbproject/
 share/UnicodeData.txt
 source/isalpha.c

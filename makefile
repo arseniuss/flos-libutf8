@@ -27,6 +27,8 @@
 
 .POSIX:
 
+include config.mk
+
 LIB = lib/libutf8.a
 HDR = include/flos/utf8.h
 
@@ -41,7 +43,7 @@ GEN = \
 
 GENOBJ = $(GEN:.c=.o)
 
-SRC = \
+SRCS = \
     source/chr2str.c \
     source/chrlen.c \
     source/isvalid.c \
@@ -54,8 +56,6 @@ SRC = \
     source/type.c \
     $(GEN)
 
-OBJ = $(SRC:.c=.o)
-
 TESTSRC = \
     test/boundary.c \
     test/kosme.c \
@@ -64,25 +64,30 @@ TESTSRC = \
 
 TEST = $(TESTSRC:.c=)
 
+CFLAGS += -Iinclude
 CFLAGS += -D_POSIX_C_SOURCE=200809L
 CFLAGS += -D_XOPEN_SOURCE=700
 
-include config.mk
+TEMPDIR != mktemp -d
 
-.PHONY: all check clean
+OBJS != echo $(SRCS:.c=.o) | sed -e 's/source\//$(builddir)\/source\//g'
+DEPS != echo $(SRCS:.c=.d) | sed -e 's/source\//$(builddir)\/source\//g'
+PPS != echo $(SRCS:.c=.c.pp) | sed -e 's/source\//$(builddir)\/source\//g'
+
+.SUFFIXES:
+.PHONY: all check install install-strip distclean clean pkg
 
 all: $(LIB)
 
-$(LIB): $(OBJ)
+$(LIB): $(OBJS)
 	mkdir -p lib
 	rm -f $@
-	$(AR) -rcs $@ $(OBJ)
+	$(AR) -rcs $@ $(OBJS)
 
-.c.o:
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-.c:
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIB)
+$(builddir)/%.o: %.c
+	@mkdir -p $(@D)
+	$(PP) $(CFLAGS) $< > $(builddir)/$*.c.pp
+	$(CC) $(CFLAGS) -MMD -MF $(builddir)/$*.d -c -o $@ $<
 
 $(GEN): bin/build_c.awk share/UnicodeData.txt source/type.h source/typebody.h
 	$(AWK) -f bin/build_c.awk share/UnicodeData.txt
@@ -93,6 +98,27 @@ $(TEST): $(LIB) test/tap.h
 
 check: $(TEST)
 	prove $(TEST)
+
+install: $(HDR) $(LIB)
+	install -d $(DESTDIR)$(includedir)/
+	install -m 644 $(HDR) $(DESTDIR)$(includedir)/
+	install -d $(DESTDIR)$(libdir)
+	install -m 644 $(LIB) $(DESTDIR)$(libdir)
+
+install-strip: $(HDR) $(LIB)
+	install -s -m 644 $(LIB) $(DESTDIR)$(libdir)/
+
+dist:
+	rm -rf tmp
+
+distclean: clean
+	rm -vf config.mk UCD.zip share/UnicodeData.txt
+
+pkg: all
+	make DESTDIR=$(TEMPDIR) install
+	cd $(TEMPDIR) && find . -type f -print > ../pkg.lst
+	cd $(TEMPDIR) && tar zcvf $(srcdir)/$(PACKAGE)-$(VERSION)-$(TRIPLE).tar.gz `cat ../pkg.lst`
+	rm -rf $(TEMPDIR) pkg.lst
 
 clean:
 	rm -vf $(GEN) $(OBJ) $(LIB) $(TEST)
