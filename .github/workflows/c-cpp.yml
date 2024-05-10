@@ -14,19 +14,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: configure
-      run: ./configure OS=flos
+      run: |
+        ./configure OS=flos
+        echo VERSION=$(grep "VERSION = " ./config.mk | cut -d " " -f 3) >> $GITHUB_ENV
+        echo TRIPLE=$(grep "TRIPLE = " ./config.mk | cut -d " " -f 3) >> $GITHUB_ENV
     - name: make
       run: make
     - name: make check
       run: make check
     - name: make pkg
-      run: |
-        make pkg
-        echo VERSION=$(grep "VERSION = " ./config.mk | cut -d " " -f 3) >> $GITHUB_ENV
+      run: make pkg
     - name: make dist
       run: make dist
     - name: upload binary package
       uses: actions/upload-artifact@v4.3.3
       with:
         name: distribution
-        path: ./pcell-${{ env.VERSION }}.tar.gz
+        path: ./libutf8-${{ env.VERSION }}.tar.gz
