@@ -56,7 +56,7 @@ SRCS = \
     source/type.c \
     $(GEN)
 
-TESTSRC = \
+TESTSRCS = \
     test/boundary.c \
     test/kosme.c \
     test/malformed.c \
@@ -73,6 +73,7 @@ TEMPDIR != mktemp -d
 OBJS != echo $(SRCS:.c=.o) | sed -e 's/source\//$(builddir)\/source\//g'
 DEPS != echo $(SRCS:.c=.d) | sed -e 's/source\//$(builddir)\/source\//g'
 PPS != echo $(SRCS:.c=.c.pp) | sed -e 's/source\//$(builddir)\/source\//g'
+TESTS != echo $(TESTSRCS:.c=) | sed -e 's/test\//$(builddir)\//g'
 
 .SUFFIXES:
 .PHONY: all check install install-strip distclean clean pkg
@@ -94,12 +95,15 @@ $(GEN): bin/build_c.awk share/UnicodeData.txt source/type.h source/typebody.h
 
 $(GENOBJ) source/type.o: source/type.c
 
-$(TEST): $(LIB) test/tap.h
+check: $(TESTS) $(LIB)
+	$(PROVE) $(PROVE_FLAGS) $(TESTS)
 
-check: $(TEST)
-	prove $(TEST)
+build/%: test/%.c $(LIB)
+	@mkdir -p $(builddir)/$(*D)
+	$(PP) $(CFLAGS) $< > $(builddir)/$*.c.pp
+	$(CC) $(CFLAGS) -MMD -MF $(builddir)/$*.d -o $@ $^
 
-install: $(HDR) $(LIB)
+install: $(HDR) $(LIB)builddir
 	install -d $(DESTDIR)$(includedir)/
 	install -m 644 $(HDR) $(DESTDIR)$(includedir)/
 	install -d $(DESTDIR)$(libdir)
