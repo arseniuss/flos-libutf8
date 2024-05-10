@@ -24,7 +24,7 @@ jobs:
       run: make dist
     - name: release
       uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/v')
+      if: startsWith(github.ref, 'refs/tags/')
       with:
         files: |
           libutf8-${{ env.VERSION }}.tar.gz
