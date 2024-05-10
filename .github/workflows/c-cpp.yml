@@ -19,3 +19,9 @@ jobs:
       run: make
     - name: make check
       run: make check
+    - name: make pkg
+      run: make pkg
+    - name: upload binary package
+      uses: actions/upload-artifact@v4.3.3
+      with:
+        path: ./*.tar.gz
